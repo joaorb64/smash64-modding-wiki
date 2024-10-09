@@ -1,16 +1,22 @@
-site_name: My Docs
+site_name: Smash 64 modding wiki
 site_url: https://joaorb64.github.io/smash64-modding-wiki/
 theme:
   name: material
   palette:
     scheme: slate
-    primary: red
-    accent: orange
   logo: images/logo.png
   favicon: images/logo.png
   features:
     - search.suggest
-    - search.highlight
+    - navigation.sections
+    - navigation.tracking
+    - navigation.expand
+    - navigation.path
+    - navigation.tabs
+    - navigation.indexes
+    - toc.follow
+    - toc.integrate
+    - navigation.top
 plugins:
   - search
   - git-authors

@@ -8,7 +8,7 @@ theme:
   favicon: images/logo.png
   features:
     - search.suggest
-    - navigation.sections
+    # - navigation.sections
     - navigation.tracking
     - navigation.expand
     - navigation.path

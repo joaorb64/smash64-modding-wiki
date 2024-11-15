@@ -5,3 +5,24 @@
 - Animations must be animated at 60 fps but exported as 30fps to import correctly
 
 - To avoid animating special parts, hide them by hitting H during pose mode
+
+## Texture Flags
+You can set these flags by adding them to the material's name
+
+Texture repeat mode flags, S = Side, T = Top:
+
+- \_ClampS
+- \_ClampT
+    - Clamp is same as Extend in Blender
+- \_MirrorS
+- \_MirrorT
+    - Mirror is the same as Mirror in Blender
+
+Other flags:
+
+- \_EnvMapping
+    - Metal Mario style environment mapping
+- \_CullBoth
+    - Disables backface culling
+- \_Transparent
+    - Enables transparency on texture

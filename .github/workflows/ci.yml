@@ -25,6 +25,8 @@ jobs:
           path: .cache
           restore-keys: |
             mkdocs-material-
+      - name: Install pipenv
+        run: pip install pipenv
       - run: pipenv install
       - name: Deploy
         env:

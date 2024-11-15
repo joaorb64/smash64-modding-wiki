@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 mkdocs-material = "*"
 mkdocs-git-authors-plugin = "*"
+mkdocs-git-committers-plugin-2 = "*"
 
 [dev-packages]
 

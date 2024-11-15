@@ -19,7 +19,10 @@ theme:
     - navigation.top
 plugins:
   - search
-  - git-authors
+  # - git-authors
+  - git-committers:
+      repository: joaorb64/smash64-modding-wiki
+      branch: main
 markdown_extensions:
   - attr_list
   - md_in_html

@@ -25,5 +25,8 @@ jobs:
           path: .cache
           restore-keys: |
             mkdocs-material-
-      - run: pip install mkdocs-material mkdocs-git-authors-plugin
+      - run: pipenv install
+      - name: Deploy
+        env:
+          MKDOCS_GIT_COMMITTERS_APIKEY: ${{ secrets.GH_API_KEY }}
       - run: mkdocs gh-deploy --force

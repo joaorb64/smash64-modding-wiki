@@ -7,7 +7,7 @@
 - To avoid animating special parts, hide them by hitting H during pose mode
 
 ## Texture Flags
-You can set these flags by adding them to the material's name
+You can set these flags on a per-material basis by adding them to the material's name
 
 Texture repeat mode flags, S = Side, T = Top:
 
@@ -25,4 +25,5 @@ Other flags:
 - \_CullBoth
     - Disables backface culling
 - \_Transparent
-    - Enables transparency on texture
+    - Enables transparency on texture, default alpha color is pure black
+        - If you want to change the alpha color, refer to related sections for [Stage](../stages/stageimport.md/#changing-alpha-color) or [Character](../characters/transparenttextures.md/#changing-alpha-color) textures

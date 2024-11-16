@@ -47,9 +47,28 @@ TODO
     <figcaption>Note we're baking direct Diffuse lights into Active Color Attribute (Vertex Colors).</figcaption>
     </figure>
 
-## Model proportions
-### Blender
+## Transparent Textures
 
+### Adding transparency
+- Enable the [texture flag](../software/blender.md/#texture-flags) for transparency
+- Use pure black wherever you want transparency in your texture
+
+### Changing alpha color
+- In Pixelformer, change the `Target color format` to `RGB color with alpha channel (32 bpp)` mode
+    - If not using Pixelformer, you will need to follow [these](#multiple-alpha-colors) steps instead, even if using a single alpha color, as most other programs do not export .bmp alpha at all, or just not in a way that GE reads properly.
+- Choose the color you want to use for transparency, set it's alpha to 0 and fill in all transparent areas with it
+- Export texture as `A8:R8:G8:B8 (32 bpp)` with no other options ticked
+
+### Multiple alpha colors
+- Same steps as above, but with multiple alpha 0 colors instead of a single color
+- Re-import stage in GE, note which colors are still non-transparent in-game
+- Export stage file from Game Configuration and open the .bin in a hex editor
+- Manually find where the palette address for your updated texture is
+- Find hex value of each non-transparent color (each color is 2 bytes long) and subtract 1 from them
+
+## Model proportions
+
+### Blender
 Proportion when exporting using default FBX settings: 1 m in Blender = 100 units in Smash 64. This means a vertex at (90, 0, 83) will be located at (9000, 0, 8300) in the game.
 
 ## Frequent Issues

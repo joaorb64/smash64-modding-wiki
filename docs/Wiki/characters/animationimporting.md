@@ -13,6 +13,31 @@ Make sure you have the animation flags set as needed
 Import your FBX file  
 Preview the animation to check for any issues
 
+## Animation durations
+TODO, dropping values here for now
+
+### Ledge getup options
+
+All characters have the same total time for these animations. You can have different combinations, though.
+It always starts with a shared quick/slow animation, followed by each option's animations.
+
+Captain Falcon:
+cliffQuick 19 (shared)
+cliffClimbQuick1 9
+cliffClimbQuick2 6
+attack1 7
+attack2 33 = 40
+escape1 5
+escape2 21 = 26
+
+cliffSlow 50 (shared)
+cliffClimbSlow1 7
+cliffClimbSlow2 12
+attack1 18	
+attack2 24 = 42
+escape1 12
+escape2 29 = 41
+
 ## Possible issues
 
 - The model looks broken: this happens in cases such as:

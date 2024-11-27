@@ -8,9 +8,13 @@ TODO
 
 TODO
 
-- Do not skip rooms
+- Do not skip rooms!!!
 
 ### Blender
+
+#### Previewing the model
+
+From the game's source code: ingame camera fov: 38
 
 #### Viewing and editing vertex colors
 

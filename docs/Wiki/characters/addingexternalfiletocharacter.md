@@ -14,7 +14,7 @@ To add an extra external file, you'll have to:
 
 - At the end of the file, add the new last entry we're adding to the external file reqlist. Here we have to start with `FFFF` because it's going to be the last entry in the list. Follow that with `4 * YYYY` where `YYYY` is the pointer to what you want to import from the external file.
     - If the file you're adding has a reqlist, `0000` will do (projectile hitbox file for example). That would mean adding `FFFF0000` at the end of the file.
-    - If your file has `InternalFileTableOffsetBytes`, like Falcon Punch based GFX, use that value multiplied by 4.
+    - In case of GFX like Falcon Punch clones, you'll need the pointer to the `display list` in that file multiplied by 4.
 - Get the address to the final element in the external file list from the ParseTree. Multiply what's in the ParseTree by 4 to get the actual address you have to go.
 - Go into the `main.bin` file at the address you calculated. You'll know it's correct because you'll find `FFFF` at this address since it's the last file in the list.
 - Update this `FFFF` to be the address where you added your `FFFF` entry before divided by 4. This means that what was the last entry is now pointing towards your new last entry.

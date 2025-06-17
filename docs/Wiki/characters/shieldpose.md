@@ -86,7 +86,7 @@ Now, note that in the Misc Part selection we have `Misc 1..8`. These are the shi
 - Close the window, and you can cancel both save prompts that might open up.
 - Repeat the process for all 8 parts.
 
-# Other notes
+## Other notes
 
 ### Files
 

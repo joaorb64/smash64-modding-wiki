@@ -1,0 +1,34 @@
+Action 0x98 ShieldOn is used to interpolate the character into their shielding pose.
+For Mario, the shielding hierarchy/animations have an extra part attached to his hand compared to the normal rig, not sure if this is the case for other characters.
+
+#0 - neutral pose/hierarchy, position rig but don't animate
+
+Misc 00 in the editor:
+Import using "Import from Obj If Added" button.
+Not sure if lighting enabled matters, probably not.
+This is the pose that is transitioned into/out of for ShieldOn/ShieldOff.
+It may need to differ slightly from the pose at the end of ShieldOn.
+From my testing with Mario:
+Part 00 reset translation/rotation to 0 when the shield pose starts, couldn't be changed by modifying the neutral shield pose(misc 00).
+Part 01 retained translation/rotation from the end of ShieldOn, translation/rotation on the neutral shield pose is relative to the position at the end of ShieldOn
+(for example if the final frame of ShieldOn sets x rotation of part 01 to -40, and the neutral pose also has part 01's rotation as -40, it will be -80 in-game.)
+Part 03 retained translation/rotation from the end of ShieldOn, couldn't be changed by modifying the neutral shield pose.
+Other parts were not tested, but at a glance it seems like the rest of the parts are positioned as expected in the shield rig, and only parts 00 and 01 need special care.
+
+#1 - interpolate from right to top right
+#2 - interpolate from top right to top
+#3 - interpolate from top to top left
+#4 - interpolate from top left to left
+#5 - interpolate form left to down left
+#6 - interpolate from down left to down
+#7 - interpolate from down to down right
+#8 - interpolate from down right to right
+
+Misc 01 - 08 in the editor:
+Length of each animation should be 45 frames.
+
+The shield is attached to the last part in the hierarchy.
+The position of the shield for each extreme pose(right, top right, top, etc.) is determined by points on an ellipse relative to the neutral position.
+I've made an interactive graph which can be used to calculate the positions, found here:
+https://www.desmos.com/calculator/hgtwj1sty1
+Despite being points on an ellipse, the translation between positions is linear from frame 0 - 45.

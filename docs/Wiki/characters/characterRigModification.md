@@ -30,6 +30,7 @@ Hexadecimal → 1042520000000000
 Binary → 00010000 01000010 01010010 00000000 00000000 00000000 00000000 00000000
 
 If we look at this compared to the Bone structure for Mario (Not including top joint)
+
 | Blender Bone   | Part #   | Maya Hex/Room    | Joint Name Function                      | Binary Bit Flag |
 |----------------|----------|------------------|------------------------------------------|-----------------|
 | 0              | Part00   | FBXASC048        | Main bone base                           | 0               | 
@@ -260,6 +261,7 @@ Click Edit attribute
 </figure>
 
 There will be many parts present in the section, so lets break them down.
+
 | Part        | Animation Flag                                                   |
 |-------------|------------------------------------------------------------------|
 | Part 0000   | Part that correspond to Animation Flags 0x80000000, DONT CHANGE  |
@@ -292,6 +294,7 @@ Make sure to update each part.
 Withheld Parts 0003 corresponds to the animation flag 0x10000000, these animation flags are what is responsible for telling the animation to use that withheld part... so for Withheld Parts 0004 the flag would be 0x08000000, and then 0x04000000 for Withheld Parts 0005 etc.
 
 This is important to know for later. Here is a table explaining the concept:
+
 | Part        | Animation Flag                                                   |
 |-------------|------------------------------------------------------------------|
 | Part 0000   | Part that correspond to Animation Flags 0x80000000               |
@@ -373,6 +376,7 @@ Looking at the Head texture location from before, we see that 0E0000 is your fac
 00 - not sure but seems to match second byte 
 
 If we want another Dynamic face texture, we would insert 0E0101 to the file. Adding multiple dynamic textures would increase the two trailing bytes, i.e. 0E0202, 0E0303, etc. After adding in the new dynamic textures, pad the word til it is 0x4 bytes total.
+
 | 0E00 0000                  | 0E00000E 01010000           |
 | 0E00000E 01010000          | 0E00000E 01010E02 02000000  |
 | 0E00000E 01010E02 02000000 | 0E00000E 01010E02 020E0303  |
@@ -499,6 +503,7 @@ Lets compare the rigs again:
 We have to remember that the values we are reading are the bones actual position in the rig +4. This means the following needs to happen:
 
 Left Leg socket bone id + 4
+
 | Mario    | Mario Bone-4 | Brian-4  | Brian    |
 |----------|--------------|----------|----------| 
 | 00000017 | 00000013     | 00000019 | 0000001D |
@@ -506,6 +511,7 @@ Left Leg socket bone id + 4
 Do this process for all values. If a bone did not move, leave it alone. If it did, update it.
 
 For Brian, this would mean the following:
+
 | Rig Part Information     | Mario's Rig Values      | Brian's Rig updated Values                      |
 |--------------------------|-------------------------|-------------------------------------------------|
 | head bone id + 4         | 0734 (02A4): 0000000C   | 0734 (02A4): 0000000E                           |
@@ -527,6 +533,7 @@ XXXX (02F4): ????????
 XXXX (02F8): ????????
 
 Final section for Brian would mean the following:
+
 | Rig Part Information              | Mario's Rig Values      | Brian's Rig updated Values                      |
 |-----------------------------------|-------------------------|-------------------------------------------------|
 | Left leg socket bone id + 4       | 078C (02FC): 00000017   | 078C (02FC): 0000001D                           |
@@ -590,6 +597,7 @@ RIGHT SHIN
 LEFT SHIN
 
 Lets look back at our rig again.
+
 | Blender Bone | Part # | Mario Rig                        | Brian Rig                                |
 |--------------|--------|----------------------------------|------------------------------------------|
 | 0            | Part00 | Main bone base                   | Main bone base                           |
@@ -630,17 +638,29 @@ Lets look back at our rig again.
 
 
 The hurt boxes bone placements and updates are as follows:
+
 00000006 00000001 00000001 00000000 41200000 40800000 42CE0000 42E00000 42BE0000
+
 0000000C 00000002 00000001 00000000 42880000 41000000 43140000 430C0000 430A0000
+
 0000000E 00000001 00000000 41700000 00000000 00000000 42100000 42480000 42480000
+
 00000008 00000001 00000000 41700000 00000000 00000000 42100000 42480000 42480000
+
 0000000F 00000001 00000000 41F00000 00000000 00000000 42680000 42580000 42580000
+
 00000009 00000001 00000000 41F00000 00000000 00000000 42680000 42580000 42580000
+
 00000018 00000000 00000000 41B00000 00000000 00000000 42680000 42860000 42860000
+
 00000013 00000000 00000000 41B00000 00000000 00000000 42680000 42860000 42860000
+
 00000019 00000000 00000000 41E00000 00000000 00000000 42840000 429C0000 42980000
+
 00000014 00000000 00000000 41E00000 00000000 00000000 42840000 429C0000 42980000
+
 FFFFFFFF 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
 
 |                      | Mario     | Mario Bone-4 | Brian-4        | Brian                              |
 |----------------------|-----------|--------------|----------------|------------------------------------|
@@ -747,6 +767,7 @@ This will replace the model that is already present. If you notice for example o
 
 ###Step 12b) Adding new special parts
 Lets look at the rig again to figure out what needs to be added:
+
 | Blender Bone | Part # | Function                                 | Special Part additions    |
 |--------------|--------|------------------------------------------|---------------------------|
 | 0            | Part00 | Main bone base                           |                           |
@@ -804,9 +825,11 @@ This popup it telling us that we need to add a moveset command to any moveset to
 This window will eventually pop up. One has to click on a command, select “Set Model Form Part” from the Add drop down menu, and add in the correct bone and set the value to 1. 
 
 This is one of the few times the editor does not use HEX, but we still have to add +4 to the bone. So, for reference:
+
 | Blender Bone | Part # | Part   | Value  |
 |--------------|--------|--------|--------|
 | 30           | Part1E | 34     | 1      |
+
 <figure markdown="span">
     ![Image title](characterRigModification/image31_AddNEwSpecialPartsCommand.png)
     <figcaption></figcaption>

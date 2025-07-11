@@ -4,11 +4,28 @@
 The rig you end up modifying must follow the basic character structure. It must have proper socket joints for the arms, legs and feet. The rig can also not be any larger than 32 bones. You are limited to HEX 20, Maya Room FBXASC0512, Blender Bone 32. 
 
 ## Step 1) After making your rig and exporting ONLY your skeleton structure. 
+
 Import Rig
 Select your rig and import it. The model should distort to the new rig. Now we need to make Smash 64 accept the new structure.
+<figure markdown="span">
+    ![Image title](characterRigModification/image01_importRigOnly.png)
+    <figcaption></figcaption>
+</figure>
 
 ##Step 2) Update the skipped parts bitflag
-for the sockets, we need to make sure the correct ones are set. Sockets are the joints on the mesh that can be considered "Containers" so to speak. There is a arm socket, leg socket, and ankle socket. We take the hex value provided and convert it into binary.
+
+We now need to updat ethe skipped parts bitflag. To find it, click attribute editor.
+<figure markdown="span">
+    ![Image title](characterRigModification/image02_EditAttributes.png)
+    <figcaption></figcaption>
+</figure>
+<figure markdown="span">
+    ![Image title](characterRigModification/image03_skippedParts.png)
+    <figcaption></figcaption>
+</figure>
+
+
+For the sockets, we need to make sure the correct ones are set. Sockets are the joints on the mesh that can be considered "Containers" so to speak. There is a arm socket, leg socket, and ankle socket. We take the hex value provided and convert it into binary.
 Hexadecimal → 1042520000000000
 Binary → 00010000 01000010 01010010 00000000 00000000 00000000 00000000 00000000
 
@@ -82,11 +99,16 @@ Hexadecimal → 1002094800000000
 
 ##Step 3) Now we need to update the withheld parts section. 
 
-So we need to modify the withheld bitflag
 We have to take that withheld part and set it to the new bone structure.
+So we need to modify the withheld bitflag
+<figure markdown="span">
+    ![Image title](characterRigModification/image04_withheldbitflag.png)
+    <figcaption></figcaption>
+</figure>
+
 "withheld part bitflag" convert it the hex to binary using https://www.asciitohex.com/
 going down from the hierarchy, disable any joint you've added
-ex  if you have arm arm 2 arm 3 head head 2 head3(new) arm arm2 arm 3 you'd disable it in the bit flag so it will look something like 111110111 where 0 is disabled and 1 is enabled
+ex  if you have arm-arm2-arm3 head-head2-head3(new) arm-arm2-arm3 you'd disable it in the bit flag so it will look something like 111110111 where 0 is disabled and 1 is enabled
 
 Our goal Is 2 fold. Making sure all withheld parts are accounted for and making sure all animations are mapped to the correct bones. This is a two step process. 
 
@@ -165,7 +187,17 @@ Binary → 11111110 01100011 11101111 11111100 00000000 00000000 00000000 000000
 Hexadecimal → fe63effc00000000
 
 Update the new withheld parts and close. This structure is specifically used to export old animations for us to reimport. Given we changed the rig, the editor is putting specific animations to the old bones, which will cause a crash. By using this temporary structure, we are exporting the animations in a way for the editor to place them on the correct bone.
-Wxport all animations. As they are messed up and we need to reset them.
+
+Export all animations. As they are messed up and we need to reset them.
+<figure markdown="span">
+    ![Image title](characterRigModification/image05_exportanimations.png)
+    <figcaption></figcaption>
+</figure>
+<figure markdown="span">
+    ![Image title](characterRigModification/image06_animationdumpfolder.png)
+    <figcaption></figcaption>
+</figure>
+
 After that, we update the withheld attribute again to the final rigs proper withheld position. For Brian I added in two magic bones that would be called in for attacks. One on each arm. Those are truly withheld parts, so the new value would be
 
 | Blender Bone   | Part #   | Maya Hex/Room    | Joint Name Function                      | Binary Bit Flag |
@@ -215,8 +247,18 @@ then I will set the value to 07+04 = 0B.
 Now we want to fix the Withheld parts table. 
 
 Click Edit attribute
+<figure markdown="span">
+    ![Image title](characterRigModification/image02_EditAttributes.png)
+    <figcaption></figcaption>
+</figure>
 
 We are going to modify the withheld parts section. 
+Click Edit attribute
+<figure markdown="span">
+    ![Image title](characterRigModification/image07_awithheldparts.png)
+    <figcaption></figcaption>
+</figure>
+
 There will be many parts present in the section, so lets break them down.
 | Part        | Animation Flag                                                   |
 |-------------|------------------------------------------------------------------|
@@ -234,8 +276,18 @@ Make sure to update each part.
 
 | Part        | Animation Flag                                                   |
 |-------------|------------------------------------------------------------------|
-| Part 0004   | For our rig, Potential Withheld Magic Part, it would be Part08+04 = Part0C. The Parent joint for the added withheld part is Part06+04 = Part0A |
-| Part 0005   | For our rig, Potential Withheld Magic Part, it would be Part13+04 = Part17. The Parent joint for the added withheld part is Part12+04 = Part016 |
+| Part 0004   | For our rig, Potential Withheld Magic Part, it would be Part08+04 = Part0C. 
+                The Parent joint for the added withheld part is Part06+04 = Part0A |
+<figure markdown="span">
+    ![Image title](characterRigModification/image08_withheldpartsEx1.png)
+    <figcaption></figcaption>
+</figure>
+| Part 0005   | For our rig, Potential Withheld Magic Part, it would be Part13+04 = Part17. 
+                The Parent joint for the added withheld part is Part12+04 = Part016 |
+<figure markdown="span">
+    ![Image title](characterRigModification/image08_withheldpartsEx2.png)
+    <figcaption></figcaption>
+</figure>
 
 Withheld Parts 0003 corresponds to the animation flag 0x10000000, these animation flags are what is responsible for telling the animation to use that withheld part... so for Withheld Parts 0004 the flag would be 0x08000000, and then 0x04000000 for Withheld Parts 0005 etc.
 
@@ -257,23 +309,54 @@ This is important to know for later. Here is a table explaining the concept:
 
 Now we have done most of the work needed in the editor, we must modify the character main file. This will resolve the final issues of the rig.
 To get the character main file, we need to go to either the Animation editor and click export main file
-
+<figure markdown="span">
+    ![Image title](characterRigModification/image09_ExportMainFile.png)
+    <figcaption></figcaption>
+</figure>
 or go to the Game configuration window and export the main file from there
+<figure markdown="span">
+    ![Image title](characterRigModification/image10_EGameConfigurationMainFile.png)
+    <figcaption></figcaption>
+</figure>
 
 Game configuration is how we will import the file after we make our changes.
 Export the "Parse DisplayLists to TextFile" button in the "Special Functions" section of the Edit Model window, this text file has some important info in it we can use later.
+<figure markdown="span">
+    ![Image title](characterRigModification/image11_DisplayLists.png)
+    <figcaption></figcaption>
+</figure>
 
 in the CharacterDisplayLists.txt file we saved earlier, scroll down to the "Unknown Value Pointers" section:
-
+<figure markdown="span">
+    ![Image title](characterRigModification/image12_UnkownValueReferences.png)
+    <figcaption></figcaption>
+</figure>
 
 in this section we are looking for XXXX (0330): ... Head Part? (-4), this is where the Head Bone ID is defined for dynamic textures, XXXX is the offset in the file so in Brians case we go to 0198 and change the instances of Part08+04 = Part0C to Part0A+04=Part0E since the head bone was changed.
 
 Load the characterMain.bin file we exported into HxD. Also set the word size to 4. Makes it eaiser to read and modify.
+<figure markdown="span">
+    ![Image title](characterRigModification/image13_HXDBtyeSize.png)
+    <figcaption></figcaption>
+</figure>
 
 Find the offset we found from the CharacterDisplayLists.txt. For Brian, it was 0198.
-HxD is read as the all the numbers up to the last one being the row, i.e. 019X, and the X being the offset. Given X is 8, we are modifying the third column. As we see, 0C is present, which was Mario's head. We replace that with 0E, which is Brian's head.
+HxD is read as the all the numbers up to the last one being the row, i.e. 019X, and the X being the offset. Given X is 8, we are modifying the third column. As we see, 0C is present, which was Mario's head. 
+<figure markdown="span">
+    ![Image title](characterRigModification/image14_HXDPointerPosition.png)
+    <figcaption></figcaption>
+</figure>
+We replace that with 0E, which is Brian's head.
+<figure markdown="span">
+    ![Image title](characterRigModification/image15_HXDUpdate.png)
+    <figcaption></figcaption>
+</figure>
 
 If you see multiple 0C values, it means there are multiple textures that are referenced and all need to be updated. Here is an example from a different character rig associated with Brian. 
+<figure markdown="span">
+    ![Image title](characterRigModification/image15_HXDUpdate2.png)
+    <figcaption></figcaption>
+</figure>
 This character file is based on Link. Link has three dynamic textures on his body, being his Both his eyes and his mouth. All those are separate textures, meaning that you have to update the head bone in the three locations. 
 
 If one wants to add more dynamic textures to a character, One needs to shift pointers in the rom. For Brian, I do not have any extra dynamic textures, as I only swap his face texture. 
@@ -281,6 +364,10 @@ If one wants to add more dynamic textures to a character, One needs to shift poi
 For completion sake, I am listing the steps for adding a new dynamic texture hypothetically. If we were to add a new dynamic texture, we need to modify the bone in the character file, adding in the bone and the pointers. 
 
 Looking at the Head texture location from before, we see that 0E0000 is your face dynamic texture inherited by Mario. 
+<figure markdown="span">
+    ![Image title](characterRigModification/image16_HXDInsertingNewDynamicTexture.png)
+    <figcaption></figcaption>
+</figure>
 0E - model part 
 00 - number of iterations through the texture hierarchy 
 00 - not sure but seems to match second byte 
@@ -291,6 +378,11 @@ If we want another Dynamic face texture, we would insert 0E0101 to the file. Add
 | 0E00000E 01010E02 02000000 | 0E00000E 01010E02 020E0303  |
 
 Inserting one new dynamic texture would look something like this.
+<figure markdown="span">
+    ![Image title](characterRigModification/image16_HXDMaterialUpdate.png)
+    <figcaption></figcaption>
+</figure>
+
 Notice how all the values after the inserted words have now changed. This means the pointers in the entire file have moved. This needs to be fixed. There is a provided pointerfix script created by Fray that will update all the pointers in your file. Save the character.bin and run the bass program. You have to provide the following in the script.
 
 filename - just the name of the file, not including extension
@@ -301,6 +393,10 @@ external_offset - "Internal File Resource Offset" in the editor's game configura
 
 
 Get the internal offsets from game configuration
+<figure markdown="span">
+    ![Image title](characterRigModification/image17_CharacterOffset.png)
+    <figcaption></figcaption>
+</figure>
 
 the command would look like this: fix_pointers(brianmain, 0x198, 0x4, 0x114, 0x0)
 
@@ -309,7 +405,8 @@ If we were to add in multiple dynamic textures, 0x4 would change from 0x4 to 0x8
 If you want a dynamic texture on a bone other then the head, add it to the character file in the same location, and run the pointer fix application.
 
 i.e. 0E000015 00000000
-Step 6) Hex editing the character file to fix Unknown Value Data
+
+##Step 6) Hex editing the character file to fix Unknown Value Data
 This next section has to do with fixing joints associated with damage types, fixing the shield pose and other rig problems. The format will always be "XXXX (YYYY):" where XXXX is the offset in the file, and YYYY is where that piece of data is in relation to the Attribute Offset, so we mostly care about XXXX. This will help us find where in the file are the parts that we need to change.
 
 these are irrelevant and can be ignored,
@@ -448,6 +545,10 @@ Final section for Brian would mean the following:
 | item joint + 4                    | 07CC (033C): 00000011   | 07CC (033C): 0000000B (moved to the other hand) |
 
 With all of this information, update the character bin file with the new bone values. 
+<figure markdown="span">
+    ![Image title](characterRigModification/image18_NewSocketLocations.png)
+    <figcaption></figcaption>
+</figure>
 Make sure to save.
 
 ##Step 7) Fix the hurt boxes
@@ -458,6 +559,10 @@ begin by opening the CharacterDisplayLists.txt file we saved, at the top of the 
 
 For Brian, this looks like: Main File: 00CB Offset 0490, 
 that means that the first hurt box is found at: 0490+0104 = 0594
+<figure markdown="span">
+    ![Image title](characterRigModification/image19_BoundingBoxesLocations.png)
+    <figcaption></figcaption>
+</figure>
 The format for hurtboxes looks like this 
 00000006 00000001 00000001 00000000 41200000 40800000 42CE0000 42E00000 42BE0000
 
@@ -557,14 +662,35 @@ Make sure to update every bone to the new values.
 
 ###Step 7B) Using an IDE to modify the hurt boxes (DO THIS BEFORE YOU DO HEX EDITS)
 Now that the rig is set up with the proper bones and withheld parts, we have to fix the bounding boxes. Export the bounding box, load into Maya. 
+<figure markdown="span">
+    ![Image title](characterRigModification/image20_ExportThroughEditor.png)
+    <figcaption></figcaption>
+</figure>
 Tweak the boxes, unbind them from the current bones and rebind them to the correct bones. We need to move them to the correct bones. the best approach is to export the model before all the editing. and use it as a reference. Line up the old bones to the new ones, move the box. tweak the size and re-import when done. The best way to remove the rig, but not the box is to goto edit, delete by type history and it will unbind all the boxes. Do this and re import over the character as needed. DO THIS BEFORE YOU DO HEX EDITS.
+<figure markdown="span">
+    ![Image title](characterRigModification/image21_ImportThroughEditor.png)
+    <figcaption></figcaption>
+</figure>
 
 ##Step 8) Importing the modified Character Bin
 Once all values are changed. Save the modified file and reimport. To do this, first save your currently edited rom. It is best to not override you original rom. Make a copy.
+<figure markdown="span">
+    ![Image title](characterRigModification/image22_WriteRom.png)
+    <figcaption></figcaption>
+</figure>
 
 Now goto game configuration
+<figure markdown="span">
+    ![Image title](characterRigModification/image23_GameConfiguration.png)
+    <figcaption></figcaption>
+</figure>
+
 Choose your modified rom. Then location the character you are overridings main file
 Click inject File and choose the file you hex edited.
+<figure markdown="span">
+    ![Image title](characterRigModification/image24_GameConfigurationMenu.png)
+    <figcaption></figcaption>
+</figure>
 Once injected, write a new rom. One can choose to override the current rom, but remember, if you made a mistake in which file you changed, you will have to do all prior steps again.
 
 ##Step 9) Adjusting the Hurt boxes
@@ -583,11 +709,22 @@ https://joaorb64.github.io/smash64-modding-wiki/Wiki/characters/shieldpose/#base
 
 Follow these instructions provided by Shino.
 
+As an addendum, The shield pose has two approaches to getting it work. If your shield rig includes withheld parts, you need to import with the following option: Force Re-enabled Skipped Tracks.
+<figure markdown="span">
+    ![Image title](characterRigModification/image25_ShieldOnPose.png)
+    <figcaption></figcaption>
+</figure>
+This will make sure the animation and the shield pose align. A better approach, is that while following the Shield Pose Guide, while adding in the new root bone, ALSO remove withheld parts. Then you do not need this special option when importing the ShildOn pose.
+
 ##Step 11) Import the characters model data.
 This rom should be known as your base rom. File sizes get larger and larger the more times you add/tweak change the characters model. Even if you are fixing a color import. Keep this rom and never override it. As if you decided to modify your model, you will go back to this rom.
 Go back to the animation editor:
 
 Click import and add textures:
+<figure markdown="span">
+    ![Image title](characterRigModification/image26_ImportTextures.png)
+    <figcaption></figcaption>
+</figure>
 Follow the steps to import your character. Then save.
 
 Now it is the moment of truth. Lets test the character.
@@ -599,6 +736,10 @@ Once you have all the model parts exported to separate fbx files,  we need to st
 
 ###Step 12a) Special Parts that already exist
 If the bone in question has an old special part that can be replaced, click import from obj if added if the textures have already been imported in a prior step or click import from object and add if you have to add the new textures.
+<figure markdown="span">
+    ![Image title](characterRigModification/image27_SpecialParts.png)
+    <figcaption></figcaption>
+</figure>
 Follow the prompts. (i.e. select textures, model and special textures)
 
 This will replace the model that is already present. If you notice for example on our rig, Special part 06 has Extra 00 Hi and Extra 00 low. This is the high poly model for the special part and the low poly model for the special part. Make sure to import for both.
@@ -642,11 +783,23 @@ Lets look at the rig again to figure out what needs to be added:
 
 First, find the bone you want to add the special part to and select it in the drop down menu in the special part section of the animation editor. 
 Click Add special part with the correct bone in the drop down menu to add the space for the part.
+<figure markdown="span">
+    ![Image title](characterRigModification/image28_AddSpecialParts.png)
+    <figcaption></figcaption>
+</figure>
 Given this special part is the first to be added to this specific bone, we just need to follow the standard import steps to add the new model. 
  
 If you are adding a new special part to a bone that already has a model attached to it, when you click add special part, a pop up will appear and extra steps need to be followed:
+<figure markdown="span">
+    ![Image title](characterRigModification/image29_AddSpecialPartsPopUp.png)
+    <figcaption></figcaption>
+</figure>
 
 This popup it telling us that we need to add a moveset command to any moveset to complete the import. 
+<figure markdown="span">
+    ![Image title](characterRigModification/image30_AddSpecialPartseditor.png)
+    <figcaption></figcaption>
+</figure>
 
 This window will eventually pop up. One has to click on a command, select “Set Model Form Part” from the Add drop down menu, and add in the correct bone and set the value to 1. 
 
@@ -654,6 +807,10 @@ This is one of the few times the editor does not use HEX, but we still have to a
 | Blender Bone | Part # | Part   | Value  |
 |--------------|--------|--------|--------|
 | 30           | Part1E | 34     | 1      |
+<figure markdown="span">
+    ![Image title](characterRigModification/image31_AddNEwSpecialPartsCommand.png)
+    <figcaption></figcaption>
+</figure>
 
 Notice in the screenshot that the bone is 34, which then shows the part number and the Hex number in the command window. This is a good gage for if you have put in the correct bone. If you mess up on this step, you need to redo the entire model because you are shooting for the smallest character file one can.
 
@@ -663,6 +820,10 @@ Repeat this process for every special part you plan to add.
 
 If you are adding in more special parts to the same bone, the values you use need to be incremented.
 The first new addition needs to be value of 1. Whilst the next would be 
+<figure markdown="span">
+    ![Image title](characterRigModification/image32_AddNEwSpecialPartsInfo.png)
+    <figcaption></figcaption>
+</figure>
 
 If you want to add in more, the value increases (per the instructions above.)
 i.e. If we add another special part to Bone 1E, we would have to set the value to 2. And a third special part would have the value of 3.

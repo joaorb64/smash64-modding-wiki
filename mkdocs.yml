@@ -1,5 +1,7 @@
 site_name: Smash 64 modding wiki
 site_url: https://joaorb64.github.io/smash64-modding-wiki/
+repo_url: https://github.com/joaorb64/smash64-modding-wiki
+edit_uri: edit/main/docs/
 theme:
   name: material
   palette:
@@ -17,12 +19,19 @@ theme:
     - toc.follow
     - toc.integrate
     - navigation.top
+    - content.action.edit
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/pencil 
+    view: material/eye
 plugins:
   - search
   # - git-authors
   - git-committers:
       repository: joaorb64/smash64-modding-wiki
       branch: main
+  - git-revision-date-localized:
+      enable_creation_date: false
 markdown_extensions:
   - attr_list
   - md_in_html
